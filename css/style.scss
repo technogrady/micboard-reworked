@@ -764,6 +764,18 @@ canvas.slotgraph {
 .pco-settings .pco-ok { color: #1b7f36; font-weight: bold; }
 .pco-settings .pco-warn { color: #b3411a; font-weight: bold; }
 
+.pco-settings a,
+.pco-settings a.pco-link {
+  color: var(--color-blue);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.pco-settings a:hover {
+  color: #003f5e;
+  text-decoration: underline;
+}
+
 .pco-mapping {
   padding: .75rem;
   margin-bottom: .5rem;
