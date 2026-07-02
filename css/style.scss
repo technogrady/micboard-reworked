@@ -895,3 +895,72 @@ a:link, a:visited, a:hover, a:active {
   font-style: italic;
   margin-bottom: 0px;
 }
+
+/* toolbar - button versions of the keyboard shortcuts */
+#toolbar {
+  padding: 4px 0;
+}
+
+#toolbar .btn-group {
+  margin: 2px 8px 2px 0;
+}
+
+#toolbar .btn, #toolbar-toggle {
+  color: var(--color-white);
+  border: 1px solid var(--color-gray);
+  font-family: 'IBM Plex Sans';
+  font-weight: 300;
+}
+
+#toolbar .btn:hover, #toolbar-toggle:hover {
+  background-color: var(--color-gray);
+}
+
+#toolbar .btn.active {
+  background-color: var(--color-blue);
+  border-color: var(--color-blue);
+}
+
+#toolbar .btn:disabled {
+  opacity: .35;
+}
+
+#toolbar-toggle {
+  margin-right: .75em;
+}
+
+.toolbar-hidden #toolbar {
+  display: none;
+}
+
+/* fullscreen hides the whole navbar, like tvmode already does */
+.fullscreen-active .navbar {
+  display: none;
+}
+
+/* faint corner button to bring the menu back in tvmode or fullscreen */
+#nav-reveal {
+  display: none;
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 200;
+  opacity: .25;
+  color: var(--color-white);
+  background-color: var(--color-black);
+  border: 1px solid var(--color-gray);
+  border-radius: 6px;
+  padding: .25em .6em;
+}
+
+#nav-reveal:hover {
+  opacity: 1;
+}
+
+.tvmode #nav-reveal, .fullscreen-active #nav-reveal {
+  display: block;
+}
+
+.shownav .navbar {
+  display: flex !important;
+}

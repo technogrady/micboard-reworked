@@ -20,6 +20,7 @@ export function setBackground(mode) {
 export function setDisplayMode(mode) {
   const selector = document.getElementById('container');
   swapClass(selector, micboard.displayMode, mode);
+  selector.classList.remove('shownav');
   micboard.displayMode = mode;
 }
 

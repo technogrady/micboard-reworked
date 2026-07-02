@@ -34,6 +34,10 @@ function infoToggle() {
   } else if (micboard.group !== 0) {
     $('#go-groupedit').show();
   }
+
+  $('#toolbar button[data-group]').removeClass('active');
+  $('#toolbar button[data-group="' + micboard.group + '"]').addClass('active');
+  $('#toolbar button[data-action="groupEdit"]').prop('disabled', micboard.group === 0);
 }
 
 function updateTXOffset(slotSelector, data) {
@@ -288,8 +292,13 @@ export function renderDisplayList(dl) {
   infoToggle();
 }
 
-export function renderGroup(group) {
+export function renderGroup(g) {
+  let group = parseInt(g, 10);
+  if (Number.isNaN(group)) {
+    group = 0;
+  }
   if (micboard.settingsMode === 'CONFIG') {
+    micboard.settingsMode = 'NONE';
     $('#micboard').show();
     $('.settings').hide();
   }

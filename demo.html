@@ -53,6 +53,7 @@
             <li><kbd>q</kbd> - Show QR code</li>
             <li><kbd>esc</kbd> - reload micboard</li>
           </ul>
+          <p>Every shortcut is also a button in the top toolbar. Click &#9776; in the navbar to hide or show the buttons. The toolbar hides itself in TV and fullscreen modes &mdash; use the faint &#9776; button in the bottom-right corner to bring it back.</p>
         </div>
         <div class="col-8 color-guide">
           <h2 class="text-center">Color Guide</h2>
@@ -232,16 +233,53 @@
               </div>
             </div>
           </div>
-          <nav class="navbar navbar-dark bg-dark py-0">
+          <nav class="navbar navbar-dark bg-dark py-0 justify-content-start">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent">
               <span class="navbar-toggler-icon"></span>
             </button>
+
+            <button id="toolbar-toggle" class="btn btn-sm" type="button" title="Show / hide toolbar buttons">&#9776;</button>
+
+            <div id="toolbar" class="btn-toolbar" role="toolbar" aria-label="Micboard controls">
+              <div class="btn-group btn-group-sm" role="group" aria-label="Groups">
+                <button type="button" class="btn" data-group="0" title="Show all slots (0)">All</button>
+                <button type="button" class="btn" data-group="1" title="Group 1 (1)">1</button>
+                <button type="button" class="btn" data-group="2" title="Group 2 (2)">2</button>
+                <button type="button" class="btn" data-group="3" title="Group 3 (3)">3</button>
+                <button type="button" class="btn" data-group="4" title="Group 4 (4)">4</button>
+                <button type="button" class="btn" data-group="5" title="Group 5 (5)">5</button>
+                <button type="button" class="btn" data-group="6" title="Group 6 (6)">6</button>
+                <button type="button" class="btn" data-group="7" title="Group 7 (7)">7</button>
+                <button type="button" class="btn" data-group="8" title="Group 8 (8)">8</button>
+                <button type="button" class="btn" data-group="9" title="Group 9 (9)">9</button>
+              </div>
+              <div class="btn-group btn-group-sm" role="group" aria-label="Editors">
+                <button type="button" class="btn" data-action="groupEdit" title="Edit current group (e)">Edit Group</button>
+                <button type="button" class="btn" data-action="nameEdit" title="Extended name editor (n)">Names</button>
+                <button type="button" class="btn" data-action="bulkNameEdit" title="Bulk name editor (shift+n)">Bulk Names</button>
+                <button type="button" class="btn" data-action="configEdit" title="Device configuration editor (s)">Config</button>
+              </div>
+              <div class="btn-group btn-group-sm" role="group" aria-label="Display">
+                <button type="button" class="btn" data-action="tvMode" title="Toggle TV view (t)">TV Mode</button>
+                <button type="button" class="btn" data-action="infoDrawer" title="Change TV display mode (i)">TV Info</button>
+                <button type="button" class="btn" data-action="imageBackground" title="Toggle image backgrounds in TV view (g)">Img BG</button>
+                <button type="button" class="btn" data-action="videoBackground" title="Toggle video backgrounds in TV view (v)">Video BG</button>
+                <button type="button" class="btn" data-action="fullscreen" title="Toggle fullscreen (f)">Fullscreen</button>
+              </div>
+              <div class="btn-group btn-group-sm" role="group" aria-label="Misc">
+                <button type="button" class="btn" data-action="qr" title="Show QR code (q)">QR</button>
+                <button type="button" class="btn" data-action="demo" title="Toggle demo mode (d)">Demo</button>
+                <button type="button" class="btn" data-action="help" title="Keyboard shortcuts and color guide (?)">Help</button>
+                <button type="button" class="btn" data-action="reload" title="Reload micboard (esc)">Reload</button>
+              </div>
+            </div>
 
           </nav>
 
         </div>
         <!-- <div class="text-muted text-center">Micboard</div> -->
       </nav>
+      <button id="nav-reveal" type="button" title="Show menu">&#9776;</button>
     </div>
     <template id="column-template">
       <div class="col-sm">

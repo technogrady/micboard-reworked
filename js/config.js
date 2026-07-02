@@ -164,6 +164,8 @@ function updateHiddenSlots() {
   });
 }
 
+let configHandlersBound = false;
+
 export function initConfigEditor() {
   if (micboard.settingsMode === 'CONFIG') {
     console.log('oh that explains it!')
@@ -183,6 +185,11 @@ export function initConfigEditor() {
 
 
   updateHiddenSlots();
+
+  if (configHandlersBound) {
+    return;
+  }
+  configHandlersBound = true;
 
   $(document).on('change', '.cfg-type', function() {
     updateHiddenSlots();

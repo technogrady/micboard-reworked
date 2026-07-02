@@ -206,11 +206,12 @@ def save_current_config():
 
 def get_group_by_number(group_number):
     for group in config_tree['groups']:
-        if group['group'] == int(group_number):
+        if int(group['group']) == int(group_number):
             return group
     return None
 
 def update_group(data):
+    data['group'] = int(data['group'])
     group_update_list.append(data)
     group = get_group_by_number(data['group'])
     if not group:

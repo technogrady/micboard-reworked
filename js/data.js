@@ -43,11 +43,16 @@ function JsonUpdate() {
 
 
 function updateGroup(data) {
-  console.log('dgroup: ' + data.group + ' mgroup: ' + micboard.group);
-  micboard.groups[data.group].title = data.title;
-  micboard.groups[data.group].slots = data.slots;
-  if (micboard.group === data.group) {
-    renderGroup(data.group);
+  const group = parseInt(data.group, 10);
+  console.log('dgroup: ' + group + ' mgroup: ' + micboard.group);
+  if (!micboard.groups[group]) {
+    micboard.groups[group] = {};
+  }
+  micboard.groups[group].title = data.title;
+  micboard.groups[group].slots = data.slots;
+  micboard.groups[group].hide_charts = data.hide_charts === true;
+  if (micboard.group === group) {
+    renderGroup(group);
   }
   updateNavLinks();
 }

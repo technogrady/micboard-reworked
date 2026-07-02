@@ -103,6 +103,12 @@ export function updateNavLinks() {
       str = `${i}:`;
     }
     document.getElementById(`go-group-${i}`).innerHTML = str;
+
+    const btn = document.querySelector(`#toolbar button[data-group="${i}"]`);
+    if (btn) {
+      const title = micboard.groups[i] ? micboard.groups[i].title : '';
+      btn.title = title ? `Group ${i}: ${title} (${i})` : `Group ${i} (${i})`;
+    }
   }
 }
 
@@ -202,8 +208,9 @@ function dataFilterFromList(data) {
 }
 
 function displayListChooser() {
-  if (micboard.url.group) {
-    renderGroup(micboard.url.group);
+  const group = parseInt(micboard.url.group, 10);
+  if (group >= 1 && group <= 9) {
+    renderGroup(group);
   } else {
     renderGroup(0);
   }
