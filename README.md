@@ -3,6 +3,7 @@
 </p>
 
 <h1 align="center">Micboard</h1>
+This is a compatability update to Micboard. You will find this is VERY unfinished and I am working to get everything working. Currently the Debian python install works and that is the primary focus, with MacOS compatability not being developed. If you find any issues feel feel to open an issue. Also working on potential Planning Center integrations down the line. 
 
 A visual monitoring tool for network enabled Shure devices.  Micboard simplifies microphone monitoring and storage for artists, engineers, and volunteers.  View battery, audio, and RF levels from any device on the network.
 
