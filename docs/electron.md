@@ -1,4 +1,6 @@
 # Electron Wrapper
+> **Not working yet.** The Electron/macOS packaging path is not being developed for Micboard Reworked. This document is kept for reference and describes the original Micboard build process.
+
 Python & JavaScript dependencies can be wrapped with electron to make deployment a bit easer for those running macOS.  This is far from the ideal way to package and deploy an application for the mac, but it eliminates the need for the command line during the install process.  A Cocoa or Swift wrapper should be made, Electron adds ~300mb to the ~19mb micboard executable.
 
 There are a few different layers.
@@ -14,8 +16,8 @@ Here are the steps to generate `micboard-server.app`
 
 Download micboard and install dependencies.
 ```shell
-micboard@micboard:~$ git clone https://github.com/karlcswanson/micboard
-micboard@micboard:~$ cd micboard/
+micboard@micboard:~$ git clone https://github.com/technogrady/micboard-reworked
+micboard@micboard:~$ cd micboard-reworked/
 micboard@micboard:~/micboard$ pip3 install -r py/requirements.txt
 micboard@micboard:~/micboard$ pip3 install pyinstaller
 micboard@micboard:~/micboard$ npm install

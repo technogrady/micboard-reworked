@@ -2,11 +2,19 @@
 
 
 ## [Unreleased]
+### Added
+- `install.sh` and `update.sh` deployment scripts for Debian/Ubuntu/Raspberry Pi (dependency install, frontend build, and systemd service setup).
+
 ### Changed
+- Renamed the project to Micboard Reworked and updated documentation to point at the `technogrady/micboard-reworked` repository.
 - Modernized the frontend build for current Node.js (18+): webpack 4 → 5, node-sass → Dart Sass, removed file-loader/node-gyp.
 - Rewrote the Dockerfile as a multi-stage build (node:22 for the frontend, python:3-slim for the server).
 - Updated Debian installation instructions for Debian 12+ (system Node.js packages, Python virtual environment per PEP 668).
 - micboard.service now runs micboard from a virtual environment.
+
+### Not working yet
+- macOS (desktop app, from source, and the Electron wrapper) is not being developed.
+- Docker and the multivenue setup have not been re-verified against the rework.
 
 ### Fixed
 - `config.py` relied on Tornado importing `logging.handlers`; it is now imported explicitly.
