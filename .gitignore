@@ -26,3 +26,7 @@ static/*.js*
 config/*
 
 CLAUDE.md
+
+.venv/
+install.log
+update.log
