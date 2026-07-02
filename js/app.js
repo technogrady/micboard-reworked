@@ -14,6 +14,7 @@ import { keybindings } from './kbd.js';
 import { setBackground, setInfoDrawer } from './display.js';
 import { setTimeMode } from './chart-smoothie.js';
 import { initConfigEditor } from './config.js';
+import { initPcoEditor } from './pco.js';
 
 import '../css/colors.scss';
 import '../css/style.scss';
@@ -120,6 +121,11 @@ function mapGroups() {
 
   $('a#go-config').click(() => {
     initConfigEditor();
+    $('.collapse').collapse('hide');
+  });
+
+  $('a#go-pco').click(() => {
+    initPcoEditor();
     $('.collapse').collapse('hide');
   });
 

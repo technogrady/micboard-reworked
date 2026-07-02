@@ -25,6 +25,9 @@ static/fonts/*
 static/*.js*
 config/*
 
+# Planning Center credentials — never commit
+pco.env
+
 CLAUDE.md
 
 .venv/

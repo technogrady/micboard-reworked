@@ -713,6 +713,83 @@ canvas.slotgraph {
   font-weight: bold;
 }
 
+.pco-settings {
+  display: none;
+  color: var(--color-black);
+  padding-top: 76px;
+}
+
+.pco-settings .pco-panel {
+  max-width: 1100px;
+  margin: 0 auto;
+  background-color: var(--color-white);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pco-settings .config-header {
+  background-color: var(--color-black);
+  padding: .75rem 1.25rem;
+}
+
+.pco-settings .config-header h3 {
+  padding: 1em;
+  color: var(--color-white);
+}
+
+.pco-settings .pco-section {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--color-gray);
+}
+
+.pco-settings .pco-section h4 {
+  margin-bottom: .5rem;
+}
+
+.pco-settings label {
+  font-size: .8rem;
+  margin-bottom: .1rem;
+}
+
+.pco-settings .pco-hint {
+  display: block;
+  color: #666;
+  margin-top: .35rem;
+}
+
+.pco-settings .pco-inline {
+  margin: 0;
+}
+
+.pco-settings .pco-ok { color: #1b7f36; font-weight: bold; }
+.pco-settings .pco-warn { color: #b3411a; font-weight: bold; }
+
+.pco-mapping {
+  padding: .75rem;
+  margin-bottom: .5rem;
+  border: 1px solid var(--color-gray);
+  border-radius: 8px;
+}
+
+.pco-mapping .pco-pins {
+  margin-top: .75rem;
+}
+
+.pco-roster {
+  width: 100%;
+  font-size: .9rem;
+}
+
+.pco-roster th, .pco-roster td {
+  padding: .25rem .5rem;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.pco-settings .config-footer {
+  padding: 1rem 1.5rem;
+}
+
 .cfg-row {
   background-color: var(--color-black);
   padding: 0 1.25rem .75rem 1.25rem;

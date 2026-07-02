@@ -6,6 +6,7 @@ import { renderGroup } from './channelview.js';
 import { groupEditToggle } from './dnd.js';
 import { slotEditToggle } from './extended.js';
 import { initConfigEditor } from './config.js';
+import { initPcoEditor } from './pco.js';
 
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
@@ -26,6 +27,7 @@ function toggleFullScreen() {
 
 function uiLocked() {
   return $('.settings').is(':visible')
+    || $('.pco-settings').is(':visible')
     || $('.editzone').is(':visible')
     || $('.sidebar-nav').is(':visible');
 }
@@ -57,6 +59,7 @@ const shortcutActions = {
     $('#paste-box').show();
   },
   configEdit: initConfigEditor,
+  pcoEdit: initPcoEditor,
   qr: () => {
     generateQR();
     $('.modal').modal('toggle');
@@ -94,6 +97,7 @@ const keymap = {
   n: 'nameEdit',
   N: 'bulkNameEdit',
   s: 'configEdit',
+  p: 'pcoEdit',
   q: 'qr',
   t: 'tvMode',
   v: 'videoBackground',

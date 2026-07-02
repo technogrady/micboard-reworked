@@ -10,6 +10,7 @@ import shure
 import config
 import discover
 import offline
+import pco
 
 
 # https://stackoverflow.com/questions/5899497/checking-file-extension
@@ -153,6 +154,130 @@ class MicboardReloadConfigHandler(web.RequestHandler):
         self.write("restarting")
 
 
+# --------------------------------------------------------------------------- #
+# Planning Center Online (PCO) integration
+#
+# Credentials never travel through these responses. The backend holds the secret
+# (in pco.env) and only ever returns PCO data or the non-secret mapping config.
+# --------------------------------------------------------------------------- #
+
+class PcoCredentialsHandler(web.RequestHandler):
+    def post(self):
+        data = json.loads(self.request.body)
+        app_id = (data.get('app_id') or '').strip()
+        secret = (data.get('secret') or '').strip()
+        if not app_id or not secret:
+            self.set_status(400)
+            self.write({'error': 'app_id and secret are required'})
+            return
+        pco.save_credentials(app_id, secret)
+        pco.maybe_start_poller()
+        self.write({'configured': True})
+
+
+class PcoStatusHandler(web.RequestHandler):
+    def get(self):
+        self.write(pco.status())
+
+
+class PcoMappingsHandler(web.RequestHandler):
+    def post(self):
+        data = json.loads(self.request.body)
+        self.write(pco.save_config(data))
+
+
+class PcoServiceTypesHandler(web.RequestHandler):
+    async def get(self):
+        try:
+            self.write({'service_types': await pco.get_service_types()})
+        except pco.PCOError as err:
+            self.set_status(err.code)
+            self.write({'error': err.message})
+        except Exception as err:  # noqa: BLE001 — never leak a raw 500 to the client
+            logging.exception('PCO request failed')
+            self.set_status(502)
+            self.write({'error': 'Planning Center request failed: {}'.format(err)})
+
+
+class PcoTeamsHandler(web.RequestHandler):
+    async def get(self):
+        service_type_id = self.get_argument('service_type_id', None)
+        if not service_type_id:
+            self.set_status(400)
+            self.write({'error': 'service_type_id is required'})
+            return
+        try:
+            self.write({'teams': await pco.get_teams(service_type_id)})
+        except pco.PCOError as err:
+            self.set_status(err.code)
+            self.write({'error': err.message})
+        except Exception as err:  # noqa: BLE001 — never leak a raw 500 to the client
+            logging.exception('PCO request failed')
+            self.set_status(502)
+            self.write({'error': 'Planning Center request failed: {}'.format(err)})
+
+
+class PcoPlansHandler(web.RequestHandler):
+    async def get(self):
+        service_type_id = self.get_argument('service_type_id', None)
+        if not service_type_id:
+            self.set_status(400)
+            self.write({'error': 'service_type_id is required'})
+            return
+        try:
+            self.write({'plans': await pco.get_plans(service_type_id)})
+        except pco.PCOError as err:
+            self.set_status(err.code)
+            self.write({'error': err.message})
+        except Exception as err:  # noqa: BLE001 — never leak a raw 500 to the client
+            logging.exception('PCO request failed')
+            self.set_status(502)
+            self.write({'error': 'Planning Center request failed: {}'.format(err)})
+
+
+class PcoRosterHandler(web.RequestHandler):
+    async def get(self):
+        pco_cfg = config.config_tree.get('pco') or {}
+        service_type_id = self.get_argument('service_type_id', None) or pco_cfg.get('service_type_id')
+        plan_id = self.get_argument('plan_id', None)
+        if not service_type_id:
+            self.set_status(400)
+            self.write({'error': 'service_type_id is required'})
+            return
+        try:
+            if not plan_id:
+                plan = await pco.get_next_plan(service_type_id)
+                if not plan:
+                    self.write({'plan_id': None, 'roster': []})
+                    return
+                plan_id = plan['id']
+            self.write({'plan_id': plan_id, 'roster': await pco.get_roster(service_type_id, plan_id)})
+        except pco.PCOError as err:
+            self.set_status(err.code)
+            self.write({'error': err.message})
+        except Exception as err:  # noqa: BLE001 — never leak a raw 500 to the client
+            logging.exception('PCO request failed')
+            self.set_status(502)
+            self.write({'error': 'Planning Center request failed: {}'.format(err)})
+
+
+class PcoSyncHandler(web.RequestHandler):
+    async def post(self):
+        try:
+            data = json.loads(self.request.body) if self.request.body else {}
+        except ValueError:
+            data = {}
+        try:
+            self.write(await pco.sync(data.get('plan_id')))
+        except pco.PCOError as err:
+            self.set_status(err.code)
+            self.write({'error': err.message})
+        except Exception as err:  # noqa: BLE001 — never leak a raw 500 to the client
+            logging.exception('PCO request failed')
+            self.set_status(502)
+            self.write({'error': 'Planning Center request failed: {}'.format(err)})
+
+
 
 # https://stackoverflow.com/questions/12031007/disable-static-file-caching-in-tornado
 class NoCacheHandler(web.StaticFileHandler):
@@ -170,6 +295,14 @@ def twisted():
         (r'/api/group', GroupUpdateHandler),
         (r'/api/slot', SlotHandler),
         (r'/api/config', ConfigHandler),
+        (r'/api/pco/credentials', PcoCredentialsHandler),
+        (r'/api/pco/status', PcoStatusHandler),
+        (r'/api/pco/mappings', PcoMappingsHandler),
+        (r'/api/pco/service_types', PcoServiceTypesHandler),
+        (r'/api/pco/teams', PcoTeamsHandler),
+        (r'/api/pco/plans', PcoPlansHandler),
+        (r'/api/pco/roster', PcoRosterHandler),
+        (r'/api/pco/sync', PcoSyncHandler),
         # (r'/restart/', MicboardReloadConfigHandler),
         (r'/static/(.*)', web.StaticFileHandler, {'path': config.app_dir('static')}),
         (r'/bg/(.*)', NoCacheHandler, {'path': config.get_gif_dir()})
@@ -178,4 +311,5 @@ def twisted():
     asyncio.set_event_loop(asyncio.new_event_loop())
     app.listen(config.web_port())
     ioloop.PeriodicCallback(SocketHandler.ws_dump, 50).start()
+    pco.maybe_start_poller()
     ioloop.IOLoop.instance().start()

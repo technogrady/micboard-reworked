@@ -39,6 +39,7 @@ Micboard uses IP addresses to connect to RF devices.  RF devices can be addresse
 ## Documentation
 * [Installation](docs/installation.md)
 * [Configuration](docs/configuration.md)
+* [Planning Center mic assignments](docs/planning-center.md)
 * [Micboard MultiVenue](docs/multivenue.md)
 
 #### Developer Info

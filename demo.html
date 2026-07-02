@@ -50,6 +50,7 @@
             <li><kbd>v</kbd> - Toggle video backgrounds</li>
             <li><kbd>n</kbd> - Extended Name editor</li>
             <li><kbd>s</kbd> - Device configuration editor</li>
+            <li><kbd>p</kbd> - Planning Center mic assignments</li>
             <li><kbd>q</kbd> - Show QR code</li>
             <li><kbd>esc</kbd> - reload micboard</li>
           </ul>
@@ -212,6 +213,71 @@
 
         <div style="height: 50px;"></div>
       </div>
+      <div class="pco-settings">
+        <div class="pco-panel">
+          <div class="config-header">
+            <h3 class="text-center">Planning Center — Mic Assignments</h3>
+          </div>
+
+          <div class="pco-section">
+            <h4>1. Connect</h4>
+            <p id="pco-cred-status"></p>
+            <div class="form-row align-items-end">
+              <div class="col">
+                <label>Application ID</label>
+                <input type="text" class="form-control" id="pco-app-id" autocomplete="off" placeholder="Personal Access Token — App ID">
+              </div>
+              <div class="col">
+                <label>Secret</label>
+                <input type="password" class="form-control" id="pco-secret" autocomplete="off" placeholder="Personal Access Token — Secret">
+              </div>
+              <div class="col-auto">
+                <button type="button" class="btn btn-success" id="pco-cred-save">Save token</button>
+              </div>
+            </div>
+            <small class="pco-hint">Create a read-only token at api.planningcenteronline.com &rarr; Developers &rarr; Personal Access Tokens. Stored server-side in <code>pco.env</code> only — never sent to the browser.</small>
+          </div>
+
+          <div class="pco-section">
+            <h4>2. Service type</h4>
+            <select class="form-control" id="pco-service-type"></select>
+          </div>
+
+          <div class="pco-section">
+            <h4>3. Team &rarr; mic-pool mappings</h4>
+            <p class="pco-hint">Each mapping fills a Micboard group's slots with the people scheduled on a Planning Center team. Use <b>Assign / Pins</b> to lock a person to a specific mic (remembered week to week).</p>
+            <div id="pco-mappings"></div>
+            <button type="button" class="btn btn-sm btn-warning" id="pco-add-mapping">+ Add mapping</button>
+          </div>
+
+          <div class="pco-section">
+            <h4>4. Sync</h4>
+            <div class="form-row align-items-center">
+              <div class="col-auto">
+                <button type="button" class="btn btn-success" id="pco-sync">Sync from Planning Center</button>
+              </div>
+              <div class="col-auto">
+                <label class="pco-inline"><input type="checkbox" id="pco-autopoll"> Auto-refresh every</label>
+              </div>
+              <div class="col-auto">
+                <input type="number" class="form-control" id="pco-interval" min="30" step="30" style="width:6rem"> <span>seconds</span>
+              </div>
+              <div class="col-auto">
+                <span id="pco-last-synced" class="pco-hint"></span>
+              </div>
+            </div>
+            <p id="pco-sync-result"></p>
+          </div>
+
+          <div class="config-footer">
+            <div class="form-row">
+              <div class="col"><button id="pco-save" class="btn btn-block btn-success">Save mappings</button></div>
+              <div class="col"><button id="pco-close" class="btn btn-block btn-warning">Close</button></div>
+            </div>
+          </div>
+        </div>
+        <div style="height: 50px;"></div>
+      </div>
       <nav class="navbar fixed-top navbar-dark bg-dark py-0">
         <div class="pos-f-t">
 
@@ -219,7 +285,7 @@
             <div class="bg-dark p-4 navbar-nav" id="grouplist">
               <h4 class="text-white"><a class="nav-link" href='/'>micboard</a></h4>
               <p class="text-muted"><a class="nav-link preset-link" id="go-group-0">all devices</a> | <a class="nav-link" id="go-extended" href="#">edit extended names</a> | <a class="nav-link" id="go-config">edit config</a></p>
-              <p class="text-muted"><a class="nav-link" id="go-groupedit" href="#">edit group</a></p>
+              <p class="text-muted"><a class="nav-link" id="go-groupedit" href="#">edit group</a> | <a class="nav-link" id="go-pco" href="#">planning center</a></p>
               <div id="navbar-grouplist">
                 <p class="text-muted grp-link"><a class="nav-link preset-link" id="go-group-1">1:</a></p>
                 <p class="text-muted grp-link"><a class="nav-link preset-link" id="go-group-2">2:</a></p>
@@ -258,6 +324,7 @@
                 <button type="button" class="btn" data-action="nameEdit" title="Extended name editor (n)">Names</button>
                 <button type="button" class="btn" data-action="bulkNameEdit" title="Bulk name editor (shift+n)">Bulk Names</button>
                 <button type="button" class="btn" data-action="configEdit" title="Device configuration editor (s)">Config</button>
+                <button type="button" class="btn" data-action="pcoEdit" title="Planning Center mic assignments (p)">Plan Center</button>
               </div>
               <div class="btn-group btn-group-sm" role="group" aria-label="Display">
                 <button type="button" class="btn" data-action="tvMode" title="Toggle TV view (t)">TV Mode</button>
