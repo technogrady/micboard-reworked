@@ -64,7 +64,7 @@ function randomTypeGenerator() {
 }
 
 function randomNameGenerator() {
-  return name_sample[getRandomInt(0, name_sample.length)];
+  return name_sample[getRandomInt(0, name_sample.length - 1)];
 }
 
 function randomIPGenerator() {
@@ -183,7 +183,7 @@ function randomNameListGenerator(length) {
   const indexList = [];
   const outputList = [];
   while (indexList.length < length) {
-    const r = getRandomInt(0, name_sample.length);
+    const r = getRandomInt(0, name_sample.length - 1);
     if (indexList.indexOf(r) < 0) {
       indexList.push(r);
     }

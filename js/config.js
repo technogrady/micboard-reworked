@@ -175,6 +175,7 @@ export function initConfigEditor() {
   micboard.settingsMode = 'CONFIG';
   updateHash();
   $('#micboard').hide();
+  $('.pco-settings').hide();
   $('.settings').show();
 
   renderSlotList();

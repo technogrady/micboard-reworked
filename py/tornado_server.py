@@ -163,7 +163,12 @@ class MicboardReloadConfigHandler(web.RequestHandler):
 
 class PcoCredentialsHandler(web.RequestHandler):
     def post(self):
-        data = json.loads(self.request.body)
+        try:
+            data = json.loads(self.request.body)
+        except ValueError:
+            self.set_status(400)
+            self.write({'error': 'invalid JSON body'})
+            return
         app_id = (data.get('app_id') or '').strip()
         secret = (data.get('secret') or '').strip()
         if not app_id or not secret:
@@ -182,7 +187,12 @@ class PcoStatusHandler(web.RequestHandler):
 
 class PcoMappingsHandler(web.RequestHandler):
     def post(self):
-        data = json.loads(self.request.body)
+        try:
+            data = json.loads(self.request.body)
+        except ValueError:
+            self.set_status(400)
+            self.write({'error': 'invalid JSON body'})
+            return
         self.write(pco.save_config(data))
 
 

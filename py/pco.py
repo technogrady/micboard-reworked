@@ -233,6 +233,9 @@ async def get_roster(service_type_id, plan_id):
         pattr = people_attrs.get(pid, {})
         name = attrs.get('name') or '{} {}'.format(
             pattr.get('first_name', ''), pattr.get('last_name', '')).strip()
+        # names end up in extended_name, which the frontend renders as HTML on
+        # every dashboard — strip anything tag-like from this third-party data
+        name = re.sub(r'[<>]', '', name)
         roster.append({
             'person_id': str(pid),
             'name': name,
@@ -327,6 +330,11 @@ def status():
 def save_config(incoming):
     """Merge sanitized (secret-free) mapping config into config_tree['pco']."""
     cleaned = {k: v for k, v in (incoming or {}).items() if k in ALLOWED_CONFIG_KEYS}
+    if 'poll_interval' in cleaned:
+        try:
+            cleaned['poll_interval'] = max(30, int(cleaned['poll_interval']))
+        except (TypeError, ValueError):
+            cleaned['poll_interval'] = 300
     cfg = config.config_tree.get('pco') or {}
     cfg.update(cleaned)
     config.config_tree['pco'] = cfg
@@ -412,7 +420,11 @@ def maybe_start_poller():
 
     cfg = config.config_tree.get('pco') or {}
     if cfg.get('auto_poll') and is_configured():
-        interval_ms = max(30, int(cfg.get('poll_interval') or 300)) * 1000
+        try:
+            interval = max(30, int(cfg.get('poll_interval') or 300))
+        except (TypeError, ValueError):  # hand-edited config.json
+            interval = 300
+        interval_ms = interval * 1000
         _poller = ioloop.PeriodicCallback(_poll_tick, interval_ms)
         _poller.start()
         logging.info('PCO auto-sync poller started (%ss)', interval_ms // 1000)

@@ -6,21 +6,34 @@ import { renderGroup, updateSlot } from './channelview.js';
 import { updateChart } from './chart-smoothie.js';
 
 
-export function postJSON(url, data, callback) {
+export function postJSON(url, data, callback, errCallback) {
   fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then(res => res.json())
-    .then((response) => {
-      console.log('Success:', JSON.stringify(response))
+  }).then(res => res.json().catch(() => ({})).then(body => ({ ok: res.ok, body })))
+    .then(({ ok, body }) => {
+      if (!ok) {
+        const message = (body && body.error) ? body.error : 'request failed';
+        console.error('Error:', url, message);
+        if (errCallback) {
+          errCallback(message);
+        }
+        return;
+      }
+      console.log('Success:', JSON.stringify(body))
       if (callback) {
-        callback();
+        callback(body);
       }
     })
-    .catch(error => console.error('Error:', error));
+    .catch((error) => {
+      console.error('Error:', error);
+      if (errCallback) {
+        errCallback(String(error));
+      }
+    });
 }
 
 function JsonUpdate() {

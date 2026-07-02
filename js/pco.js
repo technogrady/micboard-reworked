@@ -23,6 +23,13 @@ function getJSON(url) {
   return fetch(url).then(r => r.json());
 }
 
+// escape untrusted strings (PCO names, config titles, error text) before innerHTML
+function esc(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+}
+
 function groups() {
   return (micboard.config && micboard.config.groups) || [];
 }
@@ -31,7 +38,7 @@ function optionList(items, valueKey, labelFn, selected) {
   return items.map((it) => {
     const v = it[valueKey];
     const sel = String(v) === String(selected) ? ' selected' : '';
-    return `<option value="${v}"${sel}>${labelFn(it)}</option>`;
+    return `<option value="${esc(v)}"${sel}>${esc(labelFn(it))}</option>`;
   }).join('');
 }
 
@@ -80,10 +87,12 @@ function loadTeams() {
 
 function renderCredStatus() {
   const el = document.getElementById('pco-cred-status');
-  if (pcoState.configured) {
-    el.innerHTML = '<span class="pco-ok">&#10003; Connected to Planning Center</span>';
-  } else {
+  if (!pcoState.configured) {
     el.innerHTML = '<span class="pco-warn">Not connected — enter a Personal Access Token below.</span>';
+  } else if (serviceTypesError && serviceTypesError.indexOf('401') !== -1) {
+    el.innerHTML = '<span class="pco-warn">Planning Center rejected the saved token — re-enter it below.</span>';
+  } else {
+    el.innerHTML = '<span class="pco-ok">&#10003; Connected to Planning Center</span>';
   }
 }
 
@@ -95,7 +104,7 @@ function renderServiceType() {
   const err = document.getElementById('pco-service-type-error');
   if (err) {
     if (serviceTypesError) {
-      err.innerHTML = '<span class="pco-warn">Couldn\'t load service types: ' + serviceTypesError
+      err.innerHTML = '<span class="pco-warn">Couldn\'t load service types: ' + esc(serviceTypesError)
         + '</span><br><small class="pco-hint">Re-check the App ID and Secret above (a 401 usually '
         + 'means they were mistyped or swapped), then save the token again.</small>';
     } else if (pcoState.configured && !serviceTypes.length) {
@@ -200,7 +209,7 @@ function openPins(idx, container) {
   getJSON('api/pco/roster?service_type_id=' + encodeURIComponent(pcoState.service_type_id))
     .then((data) => {
       if (data.error) {
-        container.innerHTML = '<p class="pco-warn">' + data.error + '</p>';
+        container.innerHTML = '<p class="pco-warn">' + esc(data.error) + '</p>';
         return;
       }
       let roster = data.roster || [];
@@ -215,8 +224,8 @@ function openPins(idx, container) {
       let html = '<table class="pco-roster"><thead><tr>'
         + '<th>Person</th><th>Position</th><th>Status</th><th>Mic</th></tr></thead><tbody>';
       roster.forEach((r) => {
-        html += `<tr data-person="${r.person_id}"><td>${r.name}</td><td>${r.position}</td>`
-          + `<td>${r.status}</td><td><select class="form-control form-control-sm pco-pin">`
+        html += `<tr data-person="${esc(r.person_id)}"><td>${esc(r.name)}</td><td>${esc(r.position)}</td>`
+          + `<td>${esc(r.status)}</td><td><select class="form-control form-control-sm pco-pin">`
           + slotOptions(pool, m.pins[r.person_id]) + '</select></td></tr>';
       });
       html += '</tbody></table>';
@@ -272,12 +281,12 @@ function saveMappings(callback) {
   };
   postJSON('api/pco/mappings', payload, () => {
     if (callback) callback();
-  });
+  }, err => flash('Save failed: ' + err, false));
 }
 
 function flash(message, ok) {
   const el = document.getElementById('pco-sync-result');
-  el.innerHTML = '<span class="' + (ok ? 'pco-ok' : 'pco-warn') + '">' + message + '</span>';
+  el.innerHTML = '<span class="' + (ok ? 'pco-ok' : 'pco-warn') + '">' + esc(message) + '</span>';
 }
 
 function runSync() {
@@ -314,6 +323,9 @@ function bindHandlers() {
     postJSON('api/pco/credentials', payload, () => {
       document.getElementById('pco-secret').value = '';
       loadStatus().then(loadServiceTypes).then(loadTeams).then(renderAll);
+    }, (err) => {
+      document.getElementById('pco-cred-status').innerHTML =
+        '<span class="pco-warn">Could not save the token: ' + esc(err) + '</span>';
     });
   });
 

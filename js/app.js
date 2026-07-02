@@ -131,6 +131,9 @@ function mapGroups() {
 
   $('a#go-groupedit').click(() => {
     if (micboard.group !== 0) {
+      if (micboard.settingsMode === 'PCO') {
+        renderGroup(micboard.group); // close the PCO panel and restore the board first
+      }
       groupEditToggle();
       $('.collapse').collapse('hide');
     }

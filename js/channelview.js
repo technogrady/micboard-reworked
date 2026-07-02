@@ -297,10 +297,11 @@ export function renderGroup(g) {
   if (Number.isNaN(group)) {
     group = 0;
   }
-  if (micboard.settingsMode === 'CONFIG') {
+  if (micboard.settingsMode === 'CONFIG' || micboard.settingsMode === 'PCO') {
     micboard.settingsMode = 'NONE';
     $('#micboard').show();
     $('.settings').hide();
+    $('.pco-settings').hide();
   }
   micboard.group = group;
   updateHash();
