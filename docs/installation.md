@@ -1,10 +1,31 @@
 # Server Installation
 Micboard server can be installed on many different platforms.  For small and portable systems, Micboard can run on a Raspberry Pi hidden in the back of a rack.  Ubuntu Server is recommended for large permanent installations.
 
-The macOS app provides a great way to try Micboard before purchasing additional hardware.
+> **Status:** The Debian/Ubuntu/Raspberry Pi install below is the supported and actively developed path for Micboard Reworked. The macOS and Docker sections further down are kept for reference but **are not working yet** — see the notes on each.
 
 ## Debian (Ubuntu & Raspberry Pi)
-Micboard requires Python 3 and Node.js 18 or newer.  The versions packaged with Debian 12+, Ubuntu 22.04+, and Raspberry Pi OS (bookworm) work out of the box.
+
+### Quick install (recommended)
+Micboard Reworked ships with an `install.sh` script that installs the Node.js and Python dependencies, builds the frontend bundle, and sets up a systemd service that starts micboard on boot and restarts it on failure.  It is safe to re-run, and it targets Debian 11+, Ubuntu 20.04+, and Raspberry Pi OS.
+
+Download micboard and run the installer
+```
+$ git clone https://github.com/technogrady/micboard-reworked/
+$ cd micboard-reworked/
+$ sudo ./install.sh
+```
+Use `sudo ./install.sh --no-service` to skip the systemd service and start micboard by hand instead.
+
+When it finishes, the installer prints the URL for the dashboard (port `8058` by default).
+
+To update an existing install, pull the latest changes and rebuild/restart only what changed
+```
+$ sudo ./update.sh
+```
+Use `./update.sh --force` to rebuild and reinstall everything regardless of what changed.
+
+### Manual install
+If you would rather set things up step by step, Micboard requires Python 3 and Node.js 18 or newer.  The versions packaged with Debian 12+, Ubuntu 22.04+, and Raspberry Pi OS (bookworm) work out of the box.
 ```
 $ sudo apt-get update
 $ sudo apt-get install git python3-venv nodejs npm
@@ -42,13 +63,17 @@ $ sudo systemctl enable micboard.service
 
 Check the [configuration](configuration.md) docs for more information on configuring micboard.
 
-## macOS - Desktop Application (UNCHANGED)
+## ~~macOS - Desktop Application~~ (not working yet)
+> **Not working yet.** macOS compatibility is not being developed for Micboard Reworked. This section is kept for reference and describes the original Micboard behaviour.
+
 Download and run micboard from the project's [GitHub Release](https://github.com/karlcswanson/micboard/releases/) page.  Add RF devices to the 'Slot Configuration' and press 'Save'.
 
 Check the [configuration](configuration.md) docs for more information on configuring micboard.
 
 
-## macOS - From Source (UNCHANGED)
+## ~~macOS - From Source~~ (not working yet)
+> **Not working yet.** macOS compatibility is not being developed for Micboard Reworked. This section is kept for reference and describes the original Micboard behaviour.
+
 Install the Xcode command-line tools
 ```
 $ xcode-select --install
@@ -89,15 +114,17 @@ Restart micboard
 $ python3 py/micboard.py
 ```
 
-## Docker (UNCHANGED)
+## ~~Docker~~ (not verified yet)
+> **Not verified yet.** The Dockerfile has been reworked into a multi-stage build, but the Docker workflow has not been verified for Micboard Reworked. The Debian install above is the supported path.
+
 Download micboard from github
 ```
-$ git clone https://github.com/karlcswanson/micboard.git
+$ git clone https://github.com/technogrady/micboard-reworked.git
 ```
 
 Build and run docker image
 ```
-$ cd micboard/
+$ cd micboard-reworked/
 $ docker build -t micboard .
 $ docker-compose up
 ```

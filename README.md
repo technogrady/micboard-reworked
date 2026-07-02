@@ -2,7 +2,7 @@
   <a href="https://micboard.io"><img width="90px" height="90px" src="docs/img/logo.png"></a>
 </p>
 
-<h1 align="center">Micboard</h1>
+<h1 align="center">Micboard Reworked</h1>
 This is a compatability update to Micboard. You will find this is VERY unfinished and I am working to get everything working. Currently the Debian python install works and that is the primary focus, with MacOS compatability not being developed. If you find any issues feel feel to open an issue. Also working on potential Planning Center integrations down the line. 
 
 A visual monitoring tool for network enabled Shure devices.  Micboard simplifies microphone monitoring and storage for artists, engineers, and volunteers.  View battery, audio, and RF levels from any device on the network.
@@ -40,10 +40,10 @@ Micboard uses IP addresses to connect to RF devices.  RF devices can be addresse
 * [Installation](docs/installation.md)
 * [Configuration](docs/configuration.md)
 * [Planning Center mic assignments](docs/planning-center.md)
-* [Micboard MultiVenue](docs/multivenue.md)
+* ~~[Micboard MultiVenue](docs/multivenue.md)~~ — *not verified in the rework yet*
 
 #### Developer Info
-* [Building the Electron wrapper for macOS](docs/electron.md)
+* ~~[Building the Electron wrapper for macOS](docs/electron.md)~~ — *macOS is not being developed yet*
 * [Extending micboard using the API](docs/api.md)
 
 

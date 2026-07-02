@@ -1,4 +1,5 @@
 # Micboard Multivenue Server
+> **Not verified in the rework yet.** This guide is carried over from the original Micboard and has not been re-tested against Micboard Reworked. The systemd examples below still call the system Python (`/usr/bin/python3`); on Debian 12+ point `ExecStart` at the virtual-environment Python created during [installation](installation.md) instead (e.g. `.venv/bin/python3`).
 
 ![micboard multivenue](img/multivenue.png)
 

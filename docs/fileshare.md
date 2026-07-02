@@ -6,7 +6,9 @@
 
 Micboard's configuration directory can be shared via [Samba](https://www.samba.org).  This makes it easy to remotely add backgrounds, edit micboard configurations, and view logs.
 
-### MacOS
+### ~~MacOS~~ (not working yet)
+> **Not working yet.** macOS is not being developed for Micboard Reworked. Use the Debian instructions below.
+
 ![mac fileshare](img/smb_server_mac.png)
 On MacOS, open up the Sharing pane within System Preferences
 
