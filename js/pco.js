@@ -16,6 +16,7 @@ let pcoState = {
 
 let serviceTypes = [];
 let teams = [];          // teams for the currently-selected service type
+let serviceTypesError = null;  // last error from loading service types / teams
 let handlersBound = false;
 
 function getJSON(url) {
@@ -46,9 +47,18 @@ function loadStatus() {
 }
 
 function loadServiceTypes() {
+  serviceTypesError = null;
   return getJSON('api/pco/service_types').then((data) => {
+    if (data && data.error) {
+      serviceTypes = [];
+      serviceTypesError = data.error;
+      return;
+    }
     serviceTypes = data.service_types || [];
-  }).catch(() => { serviceTypes = []; });
+  }).catch((err) => {
+    serviceTypes = [];
+    serviceTypesError = 'Could not reach the Micboard server: ' + err;
+  });
 }
 
 function loadTeams() {
@@ -57,7 +67,10 @@ function loadTeams() {
     return Promise.resolve();
   }
   return getJSON('api/pco/teams?service_type_id=' + encodeURIComponent(pcoState.service_type_id))
-    .then((data) => { teams = data.teams || []; })
+    .then((data) => {
+      teams = (data && data.teams) || [];
+      if (data && data.error) serviceTypesError = data.error;
+    })
     .catch(() => { teams = []; });
 }
 
@@ -78,6 +91,19 @@ function renderServiceType() {
   const sel = document.getElementById('pco-service-type');
   sel.innerHTML = '<option value="">— choose a service type —</option>'
     + optionList(serviceTypes, 'id', s => s.name, pcoState.service_type_id);
+
+  const err = document.getElementById('pco-service-type-error');
+  if (err) {
+    if (serviceTypesError) {
+      err.innerHTML = '<span class="pco-warn">Couldn\'t load service types: ' + serviceTypesError
+        + '</span><br><small class="pco-hint">Re-check the App ID and Secret above (a 401 usually '
+        + 'means they were mistyped or swapped), then save the token again.</small>';
+    } else if (pcoState.configured && !serviceTypes.length) {
+      err.innerHTML = '<span class="pco-hint">No service types were returned for this account.</span>';
+    } else {
+      err.innerHTML = '';
+    }
+  }
 }
 
 function renderMappings() {
