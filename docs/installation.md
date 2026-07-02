@@ -12,12 +12,12 @@ $ sudo apt-get install git python3-venv nodejs npm
 
 Download micboard
 ```
-$ git clone https://github.com/karlcswanson/micboard.git
+$ git clone https://github.com/technogrady/micboard-reworked/
 ```
 
 Install frontend dependencies via npm and build the micboard frontend
 ```
-$ cd micboard/
+$ cd micboard-reworked/
 $ npm install --omit=dev
 $ npm run build
 ```
@@ -42,13 +42,13 @@ $ sudo systemctl enable micboard.service
 
 Check the [configuration](configuration.md) docs for more information on configuring micboard.
 
-## macOS - Desktop Application
+## macOS - Desktop Application (UNCHANGED)
 Download and run micboard from the project's [GitHub Release](https://github.com/karlcswanson/micboard/releases/) page.  Add RF devices to the 'Slot Configuration' and press 'Save'.
 
 Check the [configuration](configuration.md) docs for more information on configuring micboard.
 
 
-## macOS - From Source
+## macOS - From Source (UNCHANGED)
 Install the Xcode command-line tools
 ```
 $ xcode-select --install
@@ -89,7 +89,7 @@ Restart micboard
 $ python3 py/micboard.py
 ```
 
-## Docker
+## Docker (UNCHANGED)
 Download micboard from github
 ```
 $ git clone https://github.com/karlcswanson/micboard.git
