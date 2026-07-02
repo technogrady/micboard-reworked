@@ -1,6 +1,17 @@
 # Changelog
 
 
+## [Unreleased]
+### Changed
+- Modernized the frontend build for current Node.js (18+): webpack 4 → 5, node-sass → Dart Sass, removed file-loader/node-gyp.
+- Rewrote the Dockerfile as a multi-stage build (node:22 for the frontend, python:3-slim for the server).
+- Updated Debian installation instructions for Debian 12+ (system Node.js packages, Python virtual environment per PEP 668).
+- micboard.service now runs micboard from a virtual environment.
+
+### Fixed
+- `config.py` relied on Tornado importing `logging.handlers`; it is now imported explicitly.
+
+
 ## [0.8.5] - 2019-10-10
 ### Added
 - Device configuration page.

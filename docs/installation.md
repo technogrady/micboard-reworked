@@ -4,12 +4,10 @@ Micboard server can be installed on many different platforms.  For small and por
 The macOS app provides a great way to try Micboard before purchasing additional hardware.
 
 ## Debian (Ubuntu & Raspberry Pi)
-Install git, python3-pip, and Node.js
+Micboard requires Python 3 and Node.js 18 or newer.  The versions packaged with Debian 12+, Ubuntu 22.04+, and Raspberry Pi OS (bookworm) work out of the box.
 ```
 $ sudo apt-get update
-$ sudo apt-get install git python3-pip
-$ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-$ sudo apt-get install nodejs
+$ sudo apt-get install git python3-venv nodejs npm
 ```
 
 Download micboard
@@ -17,20 +15,25 @@ Download micboard
 $ git clone https://github.com/karlcswanson/micboard.git
 ```
 
-Install micboard software dependencies via npm and pip
+Install frontend dependencies via npm and build the micboard frontend
 ```
 $ cd micboard/
-$ npm install --only=prod
-$ pip3 install -r py/requirements.txt
-```
-
-build the micboard frontend and run micboard
-```
+$ npm install --omit=dev
 $ npm run build
-$ python3 py/micboard.py
 ```
 
-Edit `User` and `WorkingDirectory` within `micboard.service` to match your installation and install it as a service.
+Debian 12 and newer do not allow `pip` to install packages system-wide.  Create a virtual environment for micboard and install its Python dependencies there
+```
+$ python3 -m venv venv
+$ ./venv/bin/pip install -r py/requirements.txt
+```
+
+Run micboard
+```
+$ ./venv/bin/python py/micboard.py
+```
+
+Edit `User`, `WorkingDirectory`, and `ExecStart` within `micboard.service` to match your installation and install it as a service.  `ExecStart` should point at the python binary inside the virtual environment created above.
 ```
 $ sudo cp micboard.service /etc/systemd/system/
 $ sudo systemctl start micboard.service

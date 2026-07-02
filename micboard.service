@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Environment=MICBOARD_PORT=80
-ExecStart=/usr/bin/python3 -u py/micboard.py
+ExecStart=/home/micboard/micboard/venv/bin/python -u py/micboard.py
 WorkingDirectory=/home/micboard/micboard
 StandardOutput=inherit
 StandardError=inherit
